@@ -1,56 +1,67 @@
 import pygame
-import time
-from engine.ball import Ball
+import math
+from engine.space.planet import Planet
 
-
-ay = 500 
 pygame.init()
-WIDTH, HEIGHT = 800, 600
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Bouncing Ball")
+
+W, H = 1000, 700
+screen = pygame.display.set_mode((W, H))
 clock = pygame.time.Clock()
 
+G = 0.1  # gravitational constant
 
-balls = []
+# Planets
+planets = [
+    Planet(500, 350, 40, 20000),  # star
+    Planet(500, 200, 10, 200)     # orbiting planet
+]
+
+# give initial velocity to second planet
+planets[1].vel.x = 3.5
 
 
-# main loop
+def apply_gravity(p1, p2):
+    dx = p2.pos.x - p1.pos.x
+    dy = p2.pos.y - p1.pos.y
+    dist = math.hypot(dx, dy)
+
+    if dist < 1:
+        return  # avoid zero division or crazy forces
+
+    force = G * p1.mass * p2.mass / (dist * dist)
+
+    # normalize direction
+    nx = dx / dist
+    ny = dy / dist
+
+    # apply equal & opposite forces
+    p1.vel.x += nx * force / p1.mass
+    p1.vel.y += ny * force / p1.mass
+
+    p2.vel.x -= nx * force / p2.mass
+    p2.vel.y -= ny * force / p2.mass
+
+
 running = True
-prev_time = time.time()
 while running:
+    screen.fill((10, 10, 20))
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        elif event.type == pygame.MOUSEBUTTONDOWN:
-            mx, my = event.pos
-            balls.append(Ball(mx, my, ay, width=WIDTH, height=HEIGHT)) 
-    now = time.time()
-    dt = now - prev_time
-    prev_time = now
 
-    for b in balls:
-        b.update(dt)
-        for i in range(len(balls)):
-            for j in range(i + 1, len(balls)):
-                b1 = balls[i]
-                b2 = balls[j]
+    # gravity between all planets
+    for i in range(len(planets)):
+        for j in range(i + 1, len(planets)):
+            apply_gravity(planets[i], planets[j])
 
-                dx = b1.x - b2.x
-                dy = b1.y - b2.y
-                distance = (dx**2 + dy**2) ** 0.5
+    # update + draw
+    for p in planets:
+        p.pos += p.vel
+        pygame.draw.circle(screen, p.color, (int(p.pos.x), int(p.pos.y)), p.radius)
 
-                if distance < b1.radius + b2.radius:
-                    b1.vx, b2.vx = b2.vx, b1.vx
-                    b1.vy, b2.vy = b2.vy, b1.vy
-
-
-    screen.fill((30, 30, 30))
-
-    for b in balls:
-        pygame.draw.circle(screen, b.color, (int(b.x), int(b.y)), b.radius) 
-    pygame.display.flip() 
-    clock.tick(60)        # 60 FPS
+    pygame.display.flip()
+    clock.tick(60)
 
 pygame.quit()
-
 
