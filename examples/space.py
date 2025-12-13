@@ -1,86 +1,149 @@
 import pygame
+import sys
+
+from engine.rocket import Rocket
 from engine.space.planet import Planet
+from components.slider import Slider
 
 pygame.init()
 
-WIDTH, HEIGHT = 900, 700
+
+WIDTH, HEIGHT = 900, 600
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Gravity Sandbox")
+pygame.display.set_caption("Orbital Physics Sandbox")
+
 clock = pygame.time.Clock()
-
-planets = []
-
-dragging_planet = None
-drag_offset = pygame.Vector2(0, 0)
-mouse_down = False
-mouse_down_pos = None
-THROW_STRENGTH = 5.0
+font = pygame.font.SysFont(None, 18)
 
 
-def get_planet_under_mouse(pos):
-    for p in reversed(planets): 
-        if (p.pos - pos).length() <= p.radius:
-            return p
-    return None
+planets = [
+    Planet(450, 300, radius=20, mass=90000),
+]
+
+rockets = []
+selected_rocket = None
+
+
+thrust_slider = Slider(
+    x=20, y=110, w=220,
+    min_val=-2500, max_val=2500,
+    start_val=0
+)
+
+ay_slider = Slider(
+    x=20, y=170, w=220,
+    min_val=-20, max_val=20,
+    start_val=0
+)
+
+
+def draw_text(text, x, y):
+    screen.blit(font.render(text, True, (230, 230, 230)), (x, y))
 
 
 running = True
 while running:
-    dt = clock.tick(60) / 1000
-
-    mouse_pos = pygame.Vector2(pygame.mouse.get_pos())
+    dt = clock.tick(60) / 1000.0
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
-        elif event.type == pygame.MOUSEBUTTONDOWN:
-            mouse_down = True
-            mouse_down_pos = mouse_pos
+        if selected_rocket:
+            thrust_slider.handle_event(event)
+            ay_slider.handle_event(event)
 
-            target = get_planet_under_mouse(mouse_pos)
-            if target:
-                dragging_planet = target
-                drag_offset = target.pos - mouse_pos
-                target.vel.update(0, 0)  
-        elif event.type == pygame.MOUSEMOTION:
-            if dragging_planet:
-                dragging_planet.pos = mouse_pos + drag_offset
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            mouse = pygame.Vector2(event.pos)
 
-        elif event.type == pygame.MOUSEBUTTONUP:
-            mouse_down = False
+            if event.button == 3:
+                rockets.append(
+                    Rocket(
+                        x=mouse.x,
+                        y=mouse.y,
+                        mass=50,
+                        velocity=(0, -180)
+                    )
+                )
 
-            release_pos = mouse_pos
+            if event.button == 1:
+                selected_rocket = None
+                for r in rockets:
+                    r.selected = False
+                    if r.contains_point(mouse):
+                        r.selected = True
+                        selected_rocket = r
+                        break
 
-            if dragging_planet:
-                throw_vel = (mouse_down_pos - release_pos) * THROW_STRENGTH
-                dragging_planet.vel = throw_vel
-                dragging_planet = None
+    for r in rockets:
+        for p in planets:
+            direction = p.pos - r.pos
+            distance = direction.length()
 
-            else:
-                velocity = (mouse_down_pos - release_pos) * THROW_STRENGTH
-                p = Planet(mouse_down_pos.x, mouse_down_pos.y,
-                           radius=20, mass=5000000)
-                p.vel = velocity
-                planets.append(p)
+            safe_dist = max(distance, p.radius + 8)
+
+            force_mag = (p.mass * r.mass) / (safe_dist * safe_dist)
+            r.apply_force(direction.normalize() * force_mag)
+
+            if distance < p.radius:
+                normal = direction.normalize()
+                r.pos = p.pos - normal * p.radius
+
+                vn = r.velocity.dot(normal)
+                if vn > 0:
+                    r.velocity -= normal * vn
+
+        if r == selected_rocket:
+            r.apply_force(pygame.Vector2(0, ay_slider.value) * r.mass)
+            r.apply_force(pygame.Vector2(0, -thrust_slider.value))
+
+        r.update(dt)
+
+    screen.fill((8, 10, 20))
 
     for p in planets:
-        if p is not dragging_planet:
-            p.update(dt, planets)
+        pygame.draw.circle(screen, (120, 150, 255), p.pos, p.radius)
 
-    screen.fill((10, 10, 15))
+    if selected_rocket:
+        path = selected_rocket.predict_trajectory(
+            planets,
+            steps=900,
+            dt=0.02
+        )
 
-    if mouse_down and not dragging_planet:
-        pygame.draw.line(screen, (200, 200, 255),
-                         mouse_down_pos, mouse_pos, 2)
-        pygame.draw.circle(screen, (200, 200, 255),
-                           (int(mouse_down_pos.x), int(mouse_down_pos.y)), 8, 1)
+        if len(path) > 1:
+            pygame.draw.lines(
+                screen,
+                (255, 255, 255),
+                False,
+                path,
+                1
+            )
 
-    for p in planets:
-        pygame.draw.circle(screen, p.color,
-                           (int(p.pos.x), int(p.pos.y)), p.radius)
+    for r in rockets:
+        r.draw(screen)
+
+    if selected_rocket:
+        draw_text("Rocket Inspector", 20, 30)
+
+        draw_text(f"Thrust", 20, 90)
+        thrust_slider.draw(screen)
+        draw_text(f"{thrust_slider.value:.1f}", 260, 110)
+
+        draw_text(f"ay", 20, 150)
+        ay_slider.draw(screen)
+        draw_text(f"{ay_slider.value:.2f}", 260, 170)
+
+        draw_text(
+            f"Speed: {selected_rocket.velocity.length():.2f}",
+            20, 230
+        )
+
+    draw_text("Right click: spawn rocket", 20, HEIGHT - 40)
+    draw_text("Left click: select rocket", 20, HEIGHT - 20)
 
     pygame.display.flip()
 
 pygame.quit()
+sys.exit()
 
