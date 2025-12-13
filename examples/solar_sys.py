@@ -68,63 +68,84 @@ sun = Planet(*CENTER, mass=1989000, radius=25, color=(255, 220, 80))
 sun.name = "Sun"
 
 mercury = Planet(CENTER.x + 100, CENTER.y + 10, mass=0.330, radius=4, color=(150, 150, 150))
-mercury.vel = pygame.Vector2(0, -0.48)
+mercury.vel = pygame.Vector2(0, -math.sqrt(G * sun.mass / 100))
 mercury.name = "Mercury"
 
 venus = Planet(CENTER.x + 190, CENTER.y - 20, mass=4.87, radius=7, color=(220, 180, 80))
-venus.vel = pygame.Vector2(0, -0.35)
+venus.vel = pygame.Vector2(0, -math.sqrt(G * sun.mass / 190))
 venus.name = "Venus"
 
 earth = Planet(CENTER.x + 280, CENTER.y + 30, mass=5.97, radius=8, color=(80, 120, 255))
-earth.vel = pygame.Vector2(0, -0.30)
+earth.vel = pygame.Vector2(0, -math.sqrt(G * sun.mass / 280))
 earth.name = "Earth"
 
 moon = Moon(earth.pos.x + 20, earth.pos.y, mass=0.073, radius=3, color=(200, 200, 200), parent=earth)
-moon.vel = earth.vel + pygame.Vector2(0, -0.10)
+moon_offset = moon.pos - earth.pos
+moon_tangent = pygame.Vector2(-moon_offset.y, moon_offset.x).normalize()
+moon_v_orbit = math.sqrt(G * earth.mass / moon_offset.length())
+moon.vel = earth.vel + moon_tangent * moon_v_orbit
 moon.name = "Moon"
 
 mars = Planet(CENTER.x + 380, CENTER.y - 40, mass=0.642, radius=5, color=(200, 80, 60))
-mars.vel = pygame.Vector2(0, -0.24)
+mars.vel = pygame.Vector2(0, -math.sqrt(G * sun.mass / 380) * 0.97)
 mars.name = "Mars"
 
 phobos = Moon(mars.pos.x + 15, mars.pos.y, mass=0.0001, radius=2, color=(120, 120, 120), parent=mars)
-phobos.vel = mars.vel + pygame.Vector2(0, -0.09)
+phobos_offset = phobos.pos - mars.pos
+phobos_tangent = pygame.Vector2(-phobos_offset.y, phobos_offset.x).normalize()
+phobos_v_orbit = math.sqrt(G * mars.mass / phobos_offset.length())
+phobos.vel = mars.vel + phobos_tangent * phobos_v_orbit
 phobos.name = "Phobos"
 
 jupiter = Planet(CENTER.x + 600, CENTER.y + 50, mass=1898, radius=20, color=(200, 150, 80))
-jupiter.vel = pygame.Vector2(0, -0.13)
+jupiter.vel = pygame.Vector2(0, -math.sqrt(G * sun.mass / 600))
 jupiter.name = "Jupiter"
 
 io = Moon(jupiter.pos.x + 35, jupiter.pos.y, mass=0.893, radius=4, color=(255, 200, 100), parent=jupiter)
-io.vel = jupiter.vel + pygame.Vector2(0, -0.06)
+io_offset = io.pos - jupiter.pos
+io_tangent = pygame.Vector2(-io_offset.y, io_offset.x).normalize()
+io_v_orbit = math.sqrt(G * jupiter.mass / io_offset.length())
+io.vel = jupiter.vel + io_tangent * io_v_orbit
 io.name = "Io"
 
 europa = Moon(jupiter.pos.x + 50, jupiter.pos.y - 15, mass=0.480, radius=3, color=(100, 150, 200), parent=jupiter)
-europa.vel = jupiter.vel + pygame.Vector2(0.04, -0.04)
+europa_offset = europa.pos - jupiter.pos
+europa_tangent = pygame.Vector2(-europa_offset.y, europa_offset.x).normalize()
+europa_v_orbit = math.sqrt(G * jupiter.mass / europa_offset.length())
+europa.vel = jupiter.vel + europa_tangent * europa_v_orbit
 europa.name = "Europa"
 
 saturn = Planet(CENTER.x + 900, CENTER.y - 30, mass=568, radius=18, color=(220, 200, 120))
-saturn.vel = pygame.Vector2(0, -0.095)
+saturn.vel = pygame.Vector2(0, -math.sqrt(G * sun.mass / 900))
 saturn.name = "Saturn"
 
 titan = Moon(saturn.pos.x + 40, saturn.pos.y, mass=1.345, radius=4, color=(180, 150, 100), parent=saturn)
-titan.vel = saturn.vel + pygame.Vector2(0, -0.04)
+titan_offset = titan.pos - saturn.pos
+titan_tangent = pygame.Vector2(-titan_offset.y, titan_offset.x).normalize()
+titan_v_orbit = math.sqrt(G * saturn.mass / titan_offset.length())
+titan.vel = saturn.vel + titan_tangent * titan_v_orbit
 titan.name = "Titan"
 
 uranus = Planet(CENTER.x + 1200, CENTER.y + 45, mass=86.8, radius=13, color=(100, 200, 220))
-uranus.vel = pygame.Vector2(0, -0.068)
+uranus.vel = pygame.Vector2(0, -math.sqrt(G * sun.mass / 1200))
 uranus.name = "Uranus"
 
 titania = Moon(uranus.pos.x + 30, uranus.pos.y, mass=0.0352, radius=2, color=(150, 180, 200), parent=uranus)
-titania.vel = uranus.vel + pygame.Vector2(0, -0.03)
+titania_offset = titania.pos - uranus.pos
+titania_tangent = pygame.Vector2(-titania_offset.y, titania_offset.x).normalize()
+titania_v_orbit = math.sqrt(G * uranus.mass / titania_offset.length())
+titania.vel = uranus.vel + titania_tangent * titania_v_orbit
 titania.name = "Titania"
 
 neptune = Planet(CENTER.x + 1500, CENTER.y - 35, mass=102, radius=12, color=(50, 100, 255))
-neptune.vel = pygame.Vector2(0, -0.055)
+neptune.vel = pygame.Vector2(0, -math.sqrt(G * sun.mass / 1500))
 neptune.name = "Neptune"
 
 triton = Moon(neptune.pos.x + 25, neptune.pos.y, mass=0.214, radius=2, color=(180, 180, 220), parent=neptune)
-triton.vel = neptune.vel + pygame.Vector2(0, -0.025)
+triton_offset = triton.pos - neptune.pos
+triton_tangent = pygame.Vector2(-triton_offset.y, triton_offset.x).normalize()
+triton_v_orbit = math.sqrt(G * neptune.mass / triton_offset.length())
+triton.vel = neptune.vel + triton_tangent * triton_v_orbit
 triton.name = "Triton"
 
 bodies = [sun, mercury, venus, earth, moon, mars, phobos, jupiter, io, europa, saturn, titan, uranus, titania, neptune, triton]
@@ -135,8 +156,8 @@ class Button:
     def __init__(self, x, y, width, height, text):
         self.rect = pygame.Rect(x, y, width, height)
         self.text = text
-        self.color = (100, 100, 100)
-        self.hover_color = (150, 150, 150)
+        self.color = (60, 60, 60)
+        self.hover_color = (120, 120, 120)
         
     def draw(self, screen, font):
         color = self.hover_color if self.rect.collidepoint(pygame.mouse.get_pos()) else self.color
@@ -156,8 +177,7 @@ buttons = [
     Button(280, 10, 80, 40, "5x"),
     Button(370, 10, 100, 40, "10x"),
     Button(480, 10, 100, 40, "500x"),
-    Button(1300, 850, 100, 40, "Fullscreen")
-
+    Button(1280, 850, 100, 40, "reset")
 ]
 
 running = True
@@ -177,6 +197,9 @@ initial_camera_y = camera.y
 initial_zoom = camera.zoom
 initial_body_count = len(bodies)
 merged_count = 0
+
+
+initial_states = [(b.pos.copy(), b.vel.copy()) for b in bodies]
 
 def predict_moon_trajectory(moon, planet, all_bodies, steps=2000, dt=0.01):
     pos = moon.pos.copy()
@@ -246,6 +269,16 @@ def check_and_merge_collisions(bodies):
         else:
             merged = False
 
+def calc_total_energy(bodies):
+    ke = sum(0.5 * b.mass * (b.vel.x**2 + b.vel.y**2) for b in bodies)
+    pe = 0
+    for i, b1 in enumerate(bodies):
+        for b2 in bodies[i+1:]:
+            dist = b1.pos.distance_to(b2.pos)
+            if dist > 0:
+                pe -= G * b1.mass * b2.mass / dist
+    return ke + pe
+
 while running:
     dt = clock.tick(60) / 1000 * TIME_SCALE
     
@@ -278,8 +311,12 @@ while running:
                 TIME_SCALE = 50.0
                 button_clicked = True
             elif buttons[6].is_clicked(pos):
-               screen = pygame.display.set_mode((1400,900), pygame.FULLSCREEN) 
-            
+                for i in range(min(len(bodies), len(initial_states))):
+                    bodies[i].pos = initial_states[i][0].copy()
+                    bodies[i].vel = initial_states[i][1].copy()
+                selected_body = None
+                followed_body = None
+                button_clicked = True 
             if not button_clicked:
                 if e.button == 1:  
                     world_pos = camera.from_screen(pygame.Vector2(pos))
@@ -328,23 +365,25 @@ while running:
                 show_trajectories = not show_trajectories
             elif e.key == pygame.K_h:
                 show_help = not show_help
+            elif e.key == pygame.K_f:
+                screen = pygame.display.set_mode((1400, 900), pygame.FULLSCREEN)
+            elif e.key == pygame.K_ESCAPE:
+                screen = pygame.display.set_mode((1400,900))
             elif e.key == pygame.K_HOME:
                 camera.x = initial_camera_x
                 camera.y = initial_camera_y
                 camera.zoom = initial_zoom
                 followed_body = None
-            elif e.key == pygame.K_ESCAPE:
-                screen = pygame.display.set_mode((1400, 900))
             elif e.key == pygame.K_f:
                 followed_body = selected_body if selected_body else None
+            elif e.key == pygame.K_ESCAPE:
+                running = False
 
     for b in bodies:
         b.update(bodies, dt)
     
-
     check_and_merge_collisions(bodies)
     
-
     if selected_body not in bodies:
         selected_body = None
     if followed_body not in bodies:
@@ -363,7 +402,7 @@ while running:
             pygame.draw.circle(screen, (brightness, brightness, brightness), screen_pos, 1)
 
     recalc_counter += 1
-    if recalc_counter >= 60:  
+    if recalc_counter >= 10:  
         recalc_counter = 0
         trajectory_cache.clear()
         
@@ -385,7 +424,7 @@ while running:
                     path = path[::5]
                     screen_path = [camera.to_screen(p) for p in path]
                     if len(screen_path) > 1:
-                        color = (100, 150, 200) if b.mass > 0.5 else (80, 120, 100)
+                        color = (150, 150, 150) if b.mass > 0.5 else (100, 100, 100)
                         pygame.draw.lines(
                             screen,
                             color,
@@ -404,7 +443,7 @@ while running:
                     if len(screen_path) > 1:
                         pygame.draw.lines(
                             screen,
-                            (150, 150, 200),
+                            (120, 120, 120),
                             False,
                             screen_path,
                             1
@@ -421,29 +460,37 @@ while running:
     for btn in buttons:
         btn.draw(screen, font)
     
-    status_text = f"Time: {TIME_SCALE:.2f}x | {'PAUSED' if paused else 'RUN'} | Zoom: {camera.zoom:.1f}x | Orbit:{'ON' if show_orbits else 'OFF'} Traj:{'ON' if show_trajectories else 'OFF'}"
-    if followed_body:
-        status_text += f" | FOLLOWING {followed_body.name}"
-    status_surf = font.render(status_text, True, (255, 255, 255))
-    screen.blit(status_surf, (500, 15))
+    center_x, center_y = screen.get_width()//2, screen.get_height()//2 
+    pygame.draw.line(screen, (80,80,80), (center_x - 10, center_y), (center_x+10,center_y), 1)
+    pygame.draw.line(screen, (80,80,80), (center_x, center_y-10), (center_x,center_y+10), 1)
     
-
-    if show_help:
-        help_lines = [
-            "Click: Select/Follow | F: Follow selected | Space: Deselect | Home: Reset view",
-            "O: Orbits | T: Trajectories | H: Help | +/-: Zoom | Arrows: Pan",
-        ]
-        for i, line in enumerate(help_lines):
-            help_surf = font.render(line, True, (150, 150, 150))
-            screen.blit(help_surf, (10, 850 + i * 20))
-
+    panel_x = screen.get_width() - 320
+    panel_y = 10
+    panel_w = 310
+    panel_h = 0
+    
+    ui_lines = []
+    fps = clock.get_fps()
+    ui_lines.append(f"FPS: {int(fps)}")
+    ui_lines.append(f"Time: {TIME_SCALE:.2f}x | {'PAUSED' if paused else 'RUN'}")
+    ui_lines.append(f"Zoom: {camera.zoom:.1f}x")
+    ui_lines.append(f"Bodies: {len(bodies)}")
+    total_energy = calc_total_energy(bodies)
+    ui_lines.append(f"Energy: {total_energy:.2e}")
+    ui_lines.append(f"Orbits: {'ON' if show_orbits else 'OFF'} | Trajs: {'ON' if show_trajectories else 'OFF'}")
+    
+    if followed_body:
+        ui_lines.append(f"Following: {followed_body.name}")
+    
     if selected_body:
-        info_lines = [
-            f"Name: {selected_body.name}",
-            f"Mass: {selected_body.mass:.2e}",
-            f"Radius: {selected_body.radius}",
-            f"Vel: ({selected_body.vel.x:.2f}, {selected_body.vel.y:.2f})",
-        ]
+        ui_lines.append("---")
+        ui_lines.append(f"Name: {selected_body.name}")
+        ui_lines.append(f"Mass: {selected_body.mass:.2e}")
+        ui_lines.append(f"Radius: {selected_body.radius}")
+        ui_lines.append(f"Vel: {selected_body.vel.length():.2f}")
+        
+        v_escape = math.sqrt(2 * G * selected_body.mass / selected_body.radius)
+        ui_lines.append(f"V_escape: {v_escape:.4e}")
         
         if selected_body is not sun:
             r_vec = selected_body.pos - sun.pos
@@ -458,18 +505,25 @@ while running:
                     e_x = v_vec.y * h / (G * sun.mass) - r_vec.x / r
                     e_y = -v_vec.x * h / (G * sun.mass) - r_vec.y / r
                     e = math.sqrt(e_x * e_x + e_y * e_y)
-                    info_lines.extend([
-                        f"SMA: {a:.1f}  Ecc: {e:.3f}",
-                        f"Dist from Sun: {r:.1f}",
-                    ])
-        
-        y_offset = max(100, 850 - len(info_lines) * 20)
-        pygame.draw.rect(screen, (30, 30, 50), (10, y_offset - 10, 350, len(info_lines) * 20 + 20))
-        pygame.draw.rect(screen, (255, 255, 255), (10, y_offset - 10, 350, len(info_lines) * 20 + 20), 2)
-        
-        for i, line in enumerate(info_lines):
-            text_surf = font.render(line, True, (255, 255, 255))
-            screen.blit(text_surf, (20, y_offset + i * 20))
+                    ui_lines.append(f"SMA: {a:.1f}  Ecc: {e:.3f}")
+                    ui_lines.append(f"Dist: {r:.1f}")
+    
+    panel_h = len(ui_lines) * 20 + 20
+    pygame.draw.rect(screen, (20, 20, 20), (panel_x, panel_y, panel_w, panel_h))
+    pygame.draw.rect(screen, (200, 200, 200), (panel_x, panel_y, panel_w, panel_h), 2)
+    
+    for i, line in enumerate(ui_lines):
+        text_surf = font.render(line, True, (255, 255, 255))
+        screen.blit(text_surf, (panel_x + 10, panel_y + 10 + i * 20))
+    
+    if show_help:
+        help_lines = [
+            "Click: Select/Follow | F: Follow selected | Space: Deselect | Home: Reset view",
+            "O: Orbits | T: Trajectories | H: Help | +/-: Zoom | Arrows: Pan",
+        ]
+        for i, line in enumerate(help_lines):
+            help_surf = font.render(line, True, (150, 150, 150))
+            screen.blit(help_surf, (10, screen.get_height() - 50 + i * 20))
 
     pygame.display.flip()
 

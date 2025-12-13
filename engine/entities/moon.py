@@ -9,17 +9,12 @@ class Moon(Body):
     
     def update(self, bodies, dt):
         if self.parent:
-            pos_rel = self.pos - self.parent.pos
-            vel_rel = self.vel - self.parent.vel
+            r = self.parent.pos - self.pos
+            dist = max(r.length(), self.radius + self.parent.radius)
+            acc = r.normalize() * (G * self.parent.mass / (dist * dist))
             
-            dist = max(pos_rel.length(), self.radius + self.parent.radius)
-            acc_rel = pos_rel.normalize() * (-G * self.parent.mass / (dist * dist))
-            
-            vel_rel += acc_rel * dt
-            pos_rel += vel_rel * dt
-            
-            self.pos = self.parent.pos + pos_rel
-            self.vel = self.parent.vel + vel_rel
+            self.vel += acc * dt
+            self.pos += self.vel * dt
         else:
             acc = pygame.Vector2()
             for other in bodies:
