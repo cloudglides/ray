@@ -10,13 +10,13 @@ clock = pygame.time.Clock()
 
 G = 0.1  # gravitational constant
 
-# Planets
+
 planets = [
     Planet(500, 350, 40, 20000),  # star
-    Planet(500, 200, 10, 200)     # orbiting planet
+    Planet(500, 200, 10, 200),  # orbiting planet
 ]
 
-# give initial velocity to second planet
+
 planets[1].vel.x = 3.5
 
 
@@ -30,11 +30,11 @@ def apply_gravity(p1, p2):
 
     force = G * p1.mass * p2.mass / (dist * dist)
 
-    # normalize direction
+
     nx = dx / dist
     ny = dy / dist
 
-    # apply equal & opposite forces
+
     p1.vel.x += nx * force / p1.mass
     p1.vel.y += ny * force / p1.mass
 
@@ -50,12 +50,12 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    # gravity between all planets
+
     for i in range(len(planets)):
         for j in range(i + 1, len(planets)):
             apply_gravity(planets[i], planets[j])
 
-    # update + draw
+
     for p in planets:
         p.pos += p.vel
         pygame.draw.circle(screen, p.color, (int(p.pos.x), int(p.pos.y)), p.radius)
@@ -64,4 +64,3 @@ while running:
     clock.tick(60)
 
 pygame.quit()
-

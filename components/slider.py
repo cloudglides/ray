@@ -1,5 +1,6 @@
 import pygame
 
+
 class Slider:
     def __init__(self, x, y, w, min_val, max_val, start_val):
         self.rect = pygame.Rect(x, y, w, 6)
@@ -34,9 +35,10 @@ class Slider:
 
     def draw(self, screen):
         pygame.draw.rect(screen, (180, 180, 180), self.rect)
-        pygame.draw.circle(screen, (255, 80, 80),
-                           (self.knob_x, self.rect.centery),
-                           self.knob_radius)
+        pygame.draw.circle(
+            screen, (255, 80, 80), (self.knob_x, self.rect.centery), self.knob_radius
+        )
+
     def predict_trajectory(self, planets, steps=300, dt=0.05):
         pos = self.pos.copy()
         vel = self.velocity.copy()
@@ -57,4 +59,3 @@ class Slider:
             points.append(pos.copy())
 
         return points
-
