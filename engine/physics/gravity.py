@@ -1,6 +1,6 @@
 import pygame
 
-G = 6.67430e-11 * 1e5
+G = 6.67430e-11 * 1e4
 
 def gravity_force(a, b):
     r = b.pos - a.pos

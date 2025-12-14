@@ -279,6 +279,8 @@ def calc_total_energy(bodies):
                 pe -= G * b1.mass * b2.mass / dist
     return ke + pe
 
+
+speed_mult = 1.0
 while running:
     dt = clock.tick(60) / 1000 * TIME_SCALE
     
@@ -316,7 +318,7 @@ while running:
                     bodies[i].vel = initial_states[i][1].copy()
                 selected_body = None
                 followed_body = None
-                button_clicked = True 
+                button_clicked = True
             if not button_clicked:
                 if e.button == 1:  
                     world_pos = camera.from_screen(pygame.Vector2(pos))
@@ -343,11 +345,8 @@ while running:
                 camera.pan(dx, dy)
                 pan_start = pygame.Vector2(e.pos)
         
-        elif e.type == pygame.KEYDOWN:
-            if e.key == pygame.K_SPACE:
-                selected_body = None
-                followed_body = None
-            elif e.key == pygame.K_EQUALS or e.key == pygame.K_PLUS:
+        elif e.type == pygame.KEYDOWN: 
+            if e.key == pygame.K_EQUALS or e.key == pygame.K_PLUS:
                 camera.zoom_in(1.15)
             elif e.key == pygame.K_MINUS:
                 camera.zoom_out(1.15)
@@ -357,6 +356,12 @@ while running:
                 camera.pan(0, -30)
             elif e.key == pygame.K_LEFT:
                 camera.pan(30, 0)
+            elif e.key == pygame.MOUSEBUTTONDOWN:
+                x, y = pygame.mouse.get_pos()
+                keys = pygame.key.get_mods()
+    
+            elif e.key == pygame.KMOD_ALT:  
+                 new_planet = Planet(x, y, 100000, 5, (50, 50, 50))  
             elif e.key == pygame.K_RIGHT:
                 camera.pan(-30, 0)
             elif e.key == pygame.K_o:
@@ -369,6 +374,10 @@ while running:
                 screen = pygame.display.set_mode((1400, 900), pygame.FULLSCREEN)
             elif e.key == pygame.K_ESCAPE:
                 screen = pygame.display.set_mode((1400,900))
+            elif e.key == pygame.K_SPACE:
+                paused = not paused
+                button_clicked = True
+                print(f"Key pressed")
             elif e.key == pygame.K_HOME:
                 camera.x = initial_camera_x
                 camera.y = initial_camera_y
@@ -518,12 +527,13 @@ while running:
     
     if show_help:
         help_lines = [
-            "Click: Select/Follow | F: Follow selected | Space: Deselect | Home: Reset view",
-            "O: Orbits | T: Trajectories | H: Help | +/-: Zoom | Arrows: Pan",
+            "Click: Select/Follow | F: Fullscreen | Space: Pause | Home: Reset view",
+            "O: Orbits | T: Trajectories | H: Help | +/-: Zoom | Arrows: Move View",
+            "Escape: Exit Fullscreen"
         ]
         for i, line in enumerate(help_lines):
             help_surf = font.render(line, True, (150, 150, 150))
-            screen.blit(help_surf, (10, screen.get_height() - 50 + i * 20))
+            screen.blit(help_surf, (10, screen.get_height() - 70 + i * 20))
 
     pygame.display.flip()
 
