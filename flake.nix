@@ -69,6 +69,7 @@
             pip
             pygame
             numpy
+            pytest
 
             # Add whatever else you'd like here.
             # pkgs.basedpyright
