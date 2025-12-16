@@ -1,10 +1,8 @@
 import json
 from body import Body
-
 def load_scenario(filename):
     with open(filename) as f:
         data = json.load(f)
-    
     bodies = []
     for b in data["bodies"]:
         bodies.append(Body(

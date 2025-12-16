@@ -8,7 +8,9 @@ from physics import (
 )
 from constants import G, INTEGRATOR_EULER, INTEGRATOR_VERLET
 from exceptions import RayError, InvalidBodyError, IntegrationError, CollisionError
-
+from .engine import World
+from .body import Body
+from .physics import gravity_acceleration, orbital_velocity
 __version__ = "0.1.0"
 __all__ = [
     "Body",
