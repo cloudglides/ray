@@ -5,15 +5,24 @@ import pygame
 from engine import World
 from scenario import load_scenario
 from constants import DISPLAY_SCALE
+from validators import EnergyTracker, MomentumTracker
 pygame.init()
 W, H = 1000, 700
 screen = pygame.display.set_mode((W, H))
 clock = pygame.time.Clock()
 font = pygame.font.Font(None, 24)
+
+
+
 world = World()
 for body in load_scenario("scenarios/earth_moon.json"):
     world.add_body(body)
     print(f"{body} -> speed: {body.speed():.2f} m/s")
+
+
+energy_tracker = EnergyTracker(world)
+momentum_tracker = MomentumTracker(world)
+
 paused = False
 time_scale = 1.0
 selected_body = None
@@ -30,9 +39,12 @@ else:
     pan_x, pan_y = 0, 0
     zoom = 1.0
 running = True
+frame_count = 0
 while running:
     dt = clock.tick(60) / 1000.0
+    frame_count += 1
     screen.fill((10, 10, 20))
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -47,7 +59,7 @@ while running:
             if event.key == pygame.K_5:
                 time_scale = 50.0
             if event.key == pygame.K_0:
-                time_scale = 50000.0
+                time_scale = 5000000.0
             if event.key == pygame.K_MINUS:
                 zoom *= 0.9
             if event.key == pygame.K_EQUALS:
@@ -81,6 +93,11 @@ while running:
         substeps = min(10, max(1, int(time_scale / 100)))
         for _ in range(substeps):
             world.update((dt * time_scale) / substeps)
+        energy_tracker.update()
+        momentum_tracker.update()
+        if frame_count % 100 == 0:
+            energy_tracker.check_drift(1.0)
+            momentum_tracker.check_drift(1e15)
         if len(world.bodies) > 1:
             dist = world.bodies[0].distance_to(world.bodies[1])
             if dist < 1e8:
