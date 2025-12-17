@@ -30,8 +30,8 @@ class Body:
         self.trail_length = trail_length
         self._integrator = get_integrator(integrator)
         self._old_pos: Optional[Vector2] = None
-    def update(self, bodies: List["Body"], dt: float) -> None:
-        self._integrator(self, bodies, dt)
+    def update(self, bodies: List["Body"], dt: float, spatial_grid=None, cell_size=1e8):
+        self._integrator(self, bodies, dt, spatial_grid, cell_size)
         self.trail.append(self.pos.copy())
         if len(self.trail) > self.trail_length:
             self.trail.pop(0)

@@ -4,9 +4,10 @@ from collision import resolve_elastic_collision
 
 
 class World:
-    def __init__(self, cell_size: float = 1e8):
+    def __init__(self, cell_size: float = 1e8, use_spatial_gravity:bool = False):
         self.bodies = []
         self.spatial_grid = SpatialGrid(cell_size)
+        self.use_spatial_gravity = use_spatial_gravity
     
     def add_body(self, body):
         self.bodies.append(body)
@@ -17,7 +18,7 @@ class World:
             self.spatial_grid.insert(body)
 
         for body in self.bodies:
-            body.update(self.bodies, dt)
+            body.update(self.bodies, dt, self.spatial_grid if self.use_spatial_gravity else None, self.spatial_grid.cell_size)
         return self.check_collisions()
     
     def check_collisions(self):
@@ -36,7 +37,7 @@ class World:
                     collisions.append((body, other))
                     resolve_elastic_collision(body, other)
                     checked_pairs.add(pair_id)
-            return collisions
+        return collisions
     def get_total_energy(self):
         return sum(b.kinetic_energy() for b in self.bodies)
     

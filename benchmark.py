@@ -2,7 +2,7 @@ import time
 from engine import World
 from body import Body 
 
-world = World()
+world = World(use_spatial_gravity=True)
 for i in range(100):
     world.add_body(Body(i*1e9, i*1e9, 1e24, 1e7))
 

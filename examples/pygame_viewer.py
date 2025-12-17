@@ -114,8 +114,10 @@ while running:
         substeps = min(10, max(1, int(time_scale / 100)))
         for _ in range(substeps):
             collisions = world.update((dt * time_scale) / substeps)
-            #print(f"collisions: {len(collisions)}")
+            bodies_to_destroy = set()
             for body1, body2 in collisions:
+                bodies_to_destroy.add(body1)
+                bodies_to_destroy.add(body2)
                 collision_pos = (body1.pos + body2.pos)*0.5
                 particles.append(Particle(collision_pos, Vector2(0,0), 0.05, (255, 255, 255), "flash"))
                 for _ in range(30):
@@ -130,8 +132,9 @@ while running:
                     angle = random.uniform(0, 2*math.pi)
                     vel = Vector2(math.cos(angle), math.sin(angle))*1.5e7
                     particles.append(Particle(collision_pos, vel, 0.3, (255, 150, 0), "spark" ))
-                world.bodies.remove(body1)
-                world.bodies.remove(body2)
+            for body in bodies_to_destroy:
+                if body in world.bodies:
+                    world.bodies.remove(body)
 
                     
         energy_tracker.update()
