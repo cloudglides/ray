@@ -15,13 +15,16 @@ class World:
     def update(self, dt):
         for body in self.bodies:
             body.update(self.bodies, dt)
-        self.check_collisions()
+        return self.check_collisions()
     
     def check_collisions(self):
+        collisions=[]
         for i, body1 in enumerate(self.bodies):
             for body2 in self.bodies[i + 1:]:
                 if body1.is_colliding(body2):
+                    collisions.append((body1,body2))
                     resolve_elastic_collision(body1, body2)
+        return collisions
     
     def get_total_energy(self):
         return sum(b.kinetic_energy() for b in self.bodies)

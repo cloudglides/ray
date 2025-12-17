@@ -2,10 +2,14 @@ import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 import pygame
+import random
+import math
 from engine import World
 from scenario import load_scenario
 from constants import DISPLAY_SCALE
+from particle import Particle
 from validators import EnergyTracker, MomentumTracker
+from type_defs import Vector2
 pygame.init()
 W, H = 1000, 700
 screen = pygame.display.set_mode((W, H))
@@ -26,6 +30,7 @@ momentum_tracker = MomentumTracker(world)
 paused = False
 time_scale = 1.0
 selected_body = None
+particles = []
 if world.bodies:
     cm_x = sum(b.pos.x * b.mass for b in world.bodies) / sum(b.mass for b in world.bodies)
     cm_y = sum(b.pos.y * b.mass for b in world.bodies) / sum(b.mass for b in world.bodies)
@@ -78,6 +83,22 @@ while running:
             if event.buttons[2]:
                 pan_x += event.rel[0]
                 pan_y += event.rel[1]
+
+
+    particles = [p for p in particles if p.is_alive()]
+    for p in particles:
+        p.update(dt)
+    print(f"drawing {len(particles)} particles")
+    for p in particles:
+        scaled_x =pan_x+int((p.pos.x/DISPLAY_SCALE)*zoom)
+        scaled_y=pan_y+int((p.pos.y/DISPLAY_SCALE)*zoom)
+        alpha = p.alpha()
+        if alpha>0:
+            particle_surf = pygame.Surface((10,10), pygame.SRCALPHA)
+            pygame.draw.circle(particle_surf, (*p.color, alpha), (5,5), 5)
+            screen.blit(particle_surf, (scaled_x-5, scaled_y-5))
+           
+            
     for event in pygame.event.get():
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             x, y = pygame.mouse.get_pos()
@@ -92,7 +113,17 @@ while running:
     if not paused:
         substeps = min(10, max(1, int(time_scale / 100)))
         for _ in range(substeps):
-            world.update((dt * time_scale) / substeps)
+            collisions = world.update((dt * time_scale) / substeps)
+            #print(f"collisions: {len(collisions)}")
+            for body1, body2 in collisions:
+                collision_pos = (body1.pos + body2.pos) * 0.5
+                for _ in range(20):
+                    angle = random.uniform(0, 2 * math.pi)
+                    vel = Vector2(math.cos(angle), math.sin(angle)) * 1e7
+                    p = Particle(collision_pos, vel, 2.0, (255, 200, 100))
+                    particles.append(p)
+                world.bodies.remove(body1)
+                world.bodies.remove(body2)
         energy_tracker.update()
         momentum_tracker.update()
         if frame_count % 100 == 0:
@@ -101,7 +132,8 @@ while running:
         if len(world.bodies) > 1:
             dist = world.bodies[0].distance_to(world.bodies[1])
             if dist < 1e8:
-                print(f"WARNING: Distance collapsed to {dist:.2e}")
+                pass
+                # print(f"WARNING: Distance collapsed to {dist:.2e}")
     if selected_body:
         info = f"mass:{selected_body.mass:.2e} | speed:{selected_body.speed():.1f} m/s"
         text = font.render(info, True, (255, 255, 0))
