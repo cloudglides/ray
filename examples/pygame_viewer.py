@@ -15,7 +15,7 @@ font = pygame.font.Font(None, 24)
 
 
 world = World()
-for body in load_scenario("scenarios/earth_moon.json"):
+for body in load_scenario("scenarios/collisions.json"):
     world.add_body(body)
     print(f"{body} -> speed: {body.speed():.2f} m/s")
 
@@ -59,7 +59,7 @@ while running:
             if event.key == pygame.K_5:
                 time_scale = 50.0
             if event.key == pygame.K_0:
-                time_scale = 5000000.0
+                time_scale = 5000.0
             if event.key == pygame.K_MINUS:
                 zoom *= 0.9
             if event.key == pygame.K_EQUALS:

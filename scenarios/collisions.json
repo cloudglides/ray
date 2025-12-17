@@ -1,0 +1,22 @@
+{
+  "bodies": [
+    {
+      "name": "Planet1",
+      "x": -1e8,
+      "y": 0,
+      "mass": 1e24,
+      "radius": 1e7,
+      "vx": 1000,
+      "vy": 10
+    },
+    {
+      "name": "Planet2",
+      "x": 1e8,
+      "y": 0,
+      "mass": 1e24,
+      "radius": 1e7,
+      "vx": -1000,
+      "vy": 0
+    }
+  ]
+}
