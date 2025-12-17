@@ -64,7 +64,7 @@ while running:
             if event.key == pygame.K_5:
                 time_scale = 50.0
             if event.key == pygame.K_0:
-                time_scale = 5000.0
+                time_scale = 50000.0
             if event.key == pygame.K_MINUS:
                 zoom *= 0.9
             if event.key == pygame.K_EQUALS:
@@ -116,14 +116,24 @@ while running:
             collisions = world.update((dt * time_scale) / substeps)
             #print(f"collisions: {len(collisions)}")
             for body1, body2 in collisions:
-                collision_pos = (body1.pos + body2.pos) * 0.5
+                collision_pos = (body1.pos + body2.pos)*0.5
+                particles.append(Particle(collision_pos, Vector2(0,0), 0.05, (255, 255, 255), "flash"))
+                for _ in range(30):
+                    angle = random.uniform(0,2*math.pi)
+                    vel = Vector2(math.cos(angle), math.sin(angle)) *random.uniform(6e6, 1e7)
+                    particles.append(Particle(collision_pos, vel, 5.0, (200,100,0), "shards"))
+                for _ in range(60):
+                    angle = random.uniform(0, 2*math.pi)
+                    vel = Vector2(math.cos(angle), math.sin(angle))*random.uniform(2e6, 4e6)
+                    particles.append(Particle(collision_pos, vel, 2.0, (150, 150, 150), "dust"))
                 for _ in range(20):
-                    angle = random.uniform(0, 2 * math.pi)
-                    vel = Vector2(math.cos(angle), math.sin(angle)) * 1e7
-                    p = Particle(collision_pos, vel, 2.0, (255, 200, 100))
-                    particles.append(p)
+                    angle = random.uniform(0, 2*math.pi)
+                    vel = Vector2(math.cos(angle), math.sin(angle))*1.5e7
+                    particles.append(Particle(collision_pos, vel, 0.3, (255, 150, 0), "spark" ))
                 world.bodies.remove(body1)
                 world.bodies.remove(body2)
+
+                    
         energy_tracker.update()
         momentum_tracker.update()
         if frame_count % 100 == 0:

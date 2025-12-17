@@ -18,7 +18,7 @@ class EnergyTracker:
         drift = self.drift_percent()
         if drift > max_percent:
             pass
-           # print(f"WARNING: Energy drift {drift:.2f}%")
+            print(f"WARNING: Energy drift {drift:.2f}%")
             return False
         return True
 
@@ -45,6 +45,6 @@ class MomentumTracker:
         drift = self.drift_magnitude()
         if drift > max_magnitude:
             pass
-            #print(f"WARNING: Momentum drift {drift:.2e}")
+            print(f"WARNING: Momentum drift {drift:.2e}")
             return False
         return True
