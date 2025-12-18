@@ -22,6 +22,16 @@ class Body:
             raise InvalidBodyError(f"Mass must be positive, got {mass}")
         if radius < 0:
             raise InvalidBodyError(f"Radius must be non-negative, got {radius}")
+        if trail_length < 1:
+            raise InvalidBodyError(f"Trail length must be atleast 1, got {trail_length}")
+        if not isinstance(color, tuple) or len(color) != 3:
+            raise InvalidBodyError(f"Colors must be RGB tuple (r,g,b), got {color}")
+
+        try:
+            from .physics get integrator
+            get_integrator(integrator)
+        except ValueError as e:
+            raise InvalidBodyError(f"Invalid integrator: {e}")
         self.pos = Vector2(x, y)
         self.vel = Vector2(vx, vy)
         self.mass = mass
