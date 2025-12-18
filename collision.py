@@ -17,7 +17,7 @@ def resolve_elastic_collision(body1, body2) -> None:
     
     inv_mass_sum = 1.0 / body1.mass + 1.0 / body2.mass
     
-    impulse = -2.0 * vel_along_normal / inv_mass_sum
+    impulse =-vel_along_normal / inv_mass_sum
     
     impulse_vector = normal * impulse
    

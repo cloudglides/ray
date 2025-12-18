@@ -19,7 +19,7 @@ font = pygame.font.Font(None, 24)
 
 
 world = World()
-for body in load_scenario("scenarios/collisions.json"):
+for body in load_scenario("scenarios/earth_moon.json"):
     world.add_body(body)
     print(f"{body} -> speed: {body.speed():.2f} m/s")
 

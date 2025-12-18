@@ -27,3 +27,9 @@ def  test_earth_moon_energy_conservation_spatial_gravity():
     drift = abs(final_energy- initial_energy)/initial_energy
 
     assert drift < 0.02, f"energy drift {drift*100:.2f}% exceeds 2%"
+
+
+
+
+
+
