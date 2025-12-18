@@ -1,7 +1,7 @@
 import pytest
-from type_defs import Vector2
-from physics import gravity_acceleration, orbital_velocity
-from constants import G
+from ray.type_defs import Vector2
+from ray.physics import gravity_acceleration, orbital_velocity
+from ray.constants import G
 
 
 def test_vector2_add():
@@ -48,12 +48,12 @@ def test_gravity_acceleration_magnitude():
     earth_pos = Vector2(0, 0)
     moon_pos = Vector2(1e8, 0)
     earth_mass = 5.972e24
-    
+
     acc = gravity_acceleration(moon_pos, earth_pos, earth_mass)
-    
-    expected_mag = G * earth_mass / (1e8 ** 2)
+
+    expected_mag = G * earth_mass / (1e8**2)
     actual_mag = acc.length()
-    
+
     assert abs(actual_mag - expected_mag) < 1e-10
 
 
@@ -61,9 +61,9 @@ def test_gravity_acceleration_direction():
     earth_pos = Vector2(0, 0)
     moon_pos = Vector2(1e8, 0)
     earth_mass = 5.972e24
-    
+
     acc = gravity_acceleration(moon_pos, earth_pos, earth_mass)
-    
+
     assert acc.x < 0
     assert acc.y == 0
 
@@ -71,11 +71,11 @@ def test_gravity_acceleration_direction():
 def test_orbital_velocity():
     earth_mass = 5.972e24
     orbit_radius = 384400e3
-    
+
     v = orbital_velocity(earth_mass, orbit_radius)
-    
+
     expected = (G * earth_mass / orbit_radius) ** 0.5
-    
+
     assert abs(v - expected) < 1e-6
 
 
@@ -84,9 +84,9 @@ def test_gravity_zero_distance_clamped():
     other_pos = Vector2(0, 0)
     mass = 1e24
     min_dist = 1.0
-    
+
     acc = gravity_acceleration(pos, other_pos, mass, min_dist)
-    
-    expected_mag = G * mass / (min_dist ** 2)
-    
+
+    expected_mag = G * mass / (min_dist**2)
+
     assert acc.length() == expected_mag or acc.length() == 0

@@ -2,6 +2,7 @@ import pygame
 from body import Body
 from scenario import load_scenario
 from constants import DISPLAY_SCALE
+
 pygame.init()
 W, H = 1000, 700
 screen = pygame.display.set_mode((W, H))
@@ -14,12 +15,14 @@ selected_body = None
 if bodies:
     cm_x = sum(b.pos.x * b.mass for b in bodies) / sum(b.mass for b in bodies)
     cm_y = sum(b.pos.y * b.mass for b in bodies) / sum(b.mass for b in bodies)
-    max_dist = max(max(abs(b.pos.x - cm_x) for b in bodies), 
-                   max(abs(b.pos.y - cm_y) for b in bodies))
+    max_dist = max(
+        max(abs(b.pos.x - cm_x) for b in bodies),
+        max(abs(b.pos.y - cm_y) for b in bodies),
+    )
     zoom = min(W, H) / (2.5 * max_dist / DISPLAY_SCALE) if max_dist > 0 else 1.0
     zoom = max(0.001, min(zoom, 1000))
-    pan_x = W//2 - int((cm_x / DISPLAY_SCALE) * zoom)
-    pan_y = H//2 - int((cm_y / DISPLAY_SCALE) * zoom)
+    pan_x = W // 2 - int((cm_x / DISPLAY_SCALE) * zoom)
+    pan_y = H // 2 - int((cm_y / DISPLAY_SCALE) * zoom)
 else:
     pan_x, pan_y = 0, 0
     zoom = 1.0
@@ -67,7 +70,7 @@ while running:
                 scaled_x = pan_x + int((body.pos.x / DISPLAY_SCALE) * zoom)
                 scaled_y = pan_y + int((body.pos.y / DISPLAY_SCALE) * zoom)
                 scaled_radius = max(1, int((body.radius / DISPLAY_SCALE) * zoom))
-                dist = ((x - scaled_x)**2 + (y - scaled_y)**2)**0.5
+                dist = ((x - scaled_x) ** 2 + (y - scaled_y) ** 2) ** 0.5
                 if dist < scaled_radius:
                     selected_body = body
                     break
@@ -92,7 +95,11 @@ while running:
     info = f"Bodies: {len(bodies)} | FPS: {int(clock.get_fps())} | Zoom: {zoom:.2f}x"
     info_text = font.render(info, True, (200, 200, 200))
     screen.blit(info_text, (10, 40))
-    help_text = font.render("SPACE: pause | 1/5/0: speed | -/+: zoom | Arrows: pan | R: reset | Click: select", True, (150, 150, 150))
+    help_text = font.render(
+        "SPACE: pause | 1/5/0: speed | -/+: zoom | Arrows: pan | R: reset | Click: select",
+        True,
+        (150, 150, 150),
+    )
     screen.blit(help_text, (10, H - 30))
     pygame.display.flip()
 pygame.quit()

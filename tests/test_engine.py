@@ -1,6 +1,6 @@
 import pytest
-from engine import World
-from body import Body
+from ray.engine import World
+from ray.body import Body
 
 
 def test_world_init():
@@ -21,7 +21,7 @@ def test_world_total_energy_single_body():
     b = Body(x=0, y=0, mass=100, radius=10, vx=10, vy=0)
     w.add_body(b)
     energy = w.get_total_energy()
-    expected = 0.5 * 100 * (10 ** 2)
+    expected = 0.5 * 100 * (10**2)
     assert energy == expected
 
 
