@@ -10,6 +10,7 @@ from constants import DISPLAY_SCALE
 from particle import Particle
 from validators import EnergyTracker, MomentumTracker
 from type_defs import Vector2
+from renderer import *
 pygame.init()
 W, H = 1000, 700
 screen = pygame.display.set_mode((W, H))
@@ -64,7 +65,7 @@ while running:
             if event.key == pygame.K_5:
                 time_scale = 50.0
             if event.key == pygame.K_0:
-                time_scale = 50000.0
+                time_scale = 500000.0
             if event.key == pygame.K_MINUS:
                 zoom *= 0.9
             if event.key == pygame.K_EQUALS:
@@ -88,7 +89,6 @@ while running:
     particles = [p for p in particles if p.is_alive()]
     for p in particles:
         p.update(dt)
-    print(f"drawing {len(particles)} particles")
     for p in particles:
         scaled_x =pan_x+int((p.pos.x/DISPLAY_SCALE)*zoom)
         scaled_y=pan_y+int((p.pos.y/DISPLAY_SCALE)*zoom)
@@ -103,13 +103,10 @@ while running:
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             x, y = pygame.mouse.get_pos()
             for body in world.bodies:
-                scaled_x = pan_x + int((body.pos.x / DISPLAY_SCALE) * zoom)
-                scaled_y = pan_y + int((body.pos.y / DISPLAY_SCALE) * zoom)
-                scaled_radius = max(1, int((body.radius / DISPLAY_SCALE) * zoom))
-                dist = ((x - scaled_x)**2 + (y - scaled_y)**2)**0.5
-                if dist < scaled_radius:
-                    selected_body = body
-                    break
+                BodyRenderer.draw_trail(screen, body, pan_x, pan_y, zoom, DISPLAY_SCALE)
+                BodyRenderer.draw_body(screen, body, pan_x, pan_y, zoom, DISPLAY_SCALE)
+                BodyRenderer.draw_velocity_vector(screen, body, pan_x, pan_y, zoom, DISPLAY_SCALE)
+
     if not paused:
         substeps = min(10, max(1, int(time_scale / 100)))
         for _ in range(substeps):

@@ -4,7 +4,7 @@ from body import Body
 from scenario import load_scenario
 
 def test_earth_moon_energy_conservation():
-    world=World(use_spatial_gravity=False)
+    world=World(use_spatial_gravity=True)
     for body in load_scenario("scenarios/earth_moon.json"):
         world.add_body(body)
     initial_energy = world.get_total_energy()
