@@ -40,17 +40,19 @@ def integrate_euler(
 
 
 def integrate_verlet(
-    body: "Body", bodies: List["Body"], dt: float, spatial_grid=None, cell_size=1e8
-):
-    if body._old_pos is None:
-        body._old_pos = body.pos - body.vel * dt
-    acc = calculate_total_acceleration(
-        body.pos, bodies, id(body), spatial_grid, cell_size, body.radius
-    )
-    old_pos = body.pos.copy()
-    body.pos = body.pos * 2 - body._old_pos + acc * (dt * dt)
-    body.vel = (body.pos - old_pos) / dt
-    body._old_pos = old_pos
+        body: "Body",
+        bodies: List["Body"],
+        dt: float,
+        spatial_grid=None,
+        cell_size=1e8
+        ) -> None:
+    a_old = calculate_total_acceleration(body.pos, bodies, id(body), spatial_grid, cell_size, body.radius)
+
+    body.pos += body.vel * dt + a_old * (0.5*dt*dt)
+
+    a_new = calculate_total_acceleration(body.pos, bodies, id(body), spatial_grid, cell_size, body.radius)
+
+    body.vel = (a.old+a.new)*(0.5*dt)
 
 
 def integrate_rk4(

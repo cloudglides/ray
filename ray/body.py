@@ -28,7 +28,7 @@ class Body:
             raise InvalidBodyError(f"Colors must be RGB tuple (r,g,b), got {color}")
 
         try:
-            from .physics get integrator
+            from .physics import get_integrator
             get_integrator(integrator)
         except ValueError as e:
             raise InvalidBodyError(f"Invalid integrator: {e}")
