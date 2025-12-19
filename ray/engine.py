@@ -1,17 +1,17 @@
 from .type_defs import Vector2
 from .spatial_grid import SpatialGrid
-from .collision import resolve_elastic_collision
+from .collision import *
 
 
 class World:
     def __init__(
             self,
-            cell_size: float = 1e8,
+            cell_size: float = 5e8,
             use_spatial_energy: bool = False,
             ):
         self.bodies=[]
         self.spatial_grid = SpatialGrid(cell_size)
-        self.contact=[]
+        self.contacts = []
 
     def update(self,dt):
         self.spatial_grid.clear()
@@ -22,10 +22,12 @@ class World:
             body.update(self.bodies, dt, self.spatial_grid, self.spatial_grid.cell_size)
 
         collisions = self.check_collisions()
-        self.contacts = collisions 
-        
+        solve_collisions_iteratively(collisions, iterations=10)
         return collisions 
 
+    def add_body(self, body):
+        self.bodies.append(body)
+    
     def check_collisions(self):
         collisions=[]
         checked_pairs=set()
@@ -41,7 +43,7 @@ class World:
                 pair_id = (id(body), id(other))
                 if pair_id in checked_pairs:
                     continue
-
+                
                 if body.is_colliding(other):
                     contact = resolve_elastic_collision(body,other)
                     if contact:

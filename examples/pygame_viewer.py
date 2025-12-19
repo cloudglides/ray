@@ -12,6 +12,7 @@ from ray.particle import Particle
 from ray.validators import EnergyTracker, MomentumTracker
 from ray.type_defs import Vector2
 from ray.renderer import BodyRenderer
+from ray.exceptions import RayError
 
 pygame.init()
 W, H = 1000, 700
@@ -20,9 +21,11 @@ clock = pygame.time.Clock()
 font = pygame.font.Font(None, 24)
 
 
-world = World()
+world = World(cell_size=5e8)
 try:
-    for body in load_scenario("scenarios/earth_moon.json"):
+    bodies = list(load_scenario("scenarios/collisions.json"))
+    print(f"Loaded {len(bodies)} bodies")
+    for body in bodies:
         world.add_body(body)
         print(f"{body} -> speed: {body.speed():.2f} m/s")
 except RayError as e:
@@ -74,7 +77,7 @@ while running:
             if event.key == pygame.K_5:
                 time_scale = 50.0
             if event.key == pygame.K_0:
-                time_scale = 500000.0
+                time_scale = 50000.0
             if event.key == pygame.K_MINUS:
                 zoom *= 0.9
             if event.key == pygame.K_EQUALS:
@@ -121,10 +124,10 @@ while running:
         for _ in range(substeps):
             collisions = world.update((dt * time_scale) / substeps)
             bodies_to_destroy = set()
-            for body1, body2 in collisions:
-                bodies_to_destroy.add(body1)
-                bodies_to_destroy.add(body2)
-                collision_pos = (body1.pos + body2.pos) * 0.5
+            for contact in collisions:
+                bodies_to_destroy.add(contact.body1)
+                bodies_to_destroy.add(contact.body2)
+                collision_pos = (contact.body1.pos + contact.body2.pos) * 0.5
                 particles.append(
                     Particle(
                         collision_pos, Vector2(0, 0), 0.05, (255, 255, 255), "flash"

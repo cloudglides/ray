@@ -17,6 +17,7 @@ class Body:
         integrator: str = DEFAULT_INTEGRATOR,
         vx: float = 0.0,
         vy: float = 0.0,
+        restitution: float = 0
     ):
         if mass <= 0:
             raise InvalidBodyError(f"Mass must be positive, got {mass}")
@@ -41,6 +42,7 @@ class Body:
         self.trail_length = trail_length
         self._integrator = get_integrator(integrator)
         self._old_pos: Optional[Vector2] = None
+        self.restitution = 0.8
 
     def update(self, bodies: List["Body"], dt: float, spatial_grid=None, cell_size=1e8):
         self._integrator(self, bodies, dt, spatial_grid, cell_size)
