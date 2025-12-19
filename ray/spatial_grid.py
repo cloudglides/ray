@@ -1,4 +1,5 @@
-from type_defs import Vector2
+from typing import List, Any, Tuple, Dict
+from .type_defs import Vector2
 
 
 class SpatialGrid:
