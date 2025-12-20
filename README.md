@@ -5,6 +5,9 @@ A physics engine for simulating multi-body collisions and gravitational interact
 ## Overview
 
 Ray is a rigid body dynamics simulator designed to handle complex collision scenarios with persistent contact tracking, iterative constraint solving, and energy-conserving impulse-based resolution. It uses spatial hashing for efficient broad-phase collision detection.
+![collision.json](https://github.com/user-attachments/assets/3413fa4d-c353-4447-96fe-9813012725a3)
+![earth_moon.json](https://github.com/user-attachments/assets/85207f82-5a15-4841-ae43-7d3a749cd709)
+
 
 ## Features
 
