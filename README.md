@@ -85,15 +85,6 @@ python -m examples.pygame_viewer
 
 Press **0** for 500000x speed to see collision.
 
-## Controls
-- **SPACE** - Pause/resume
-- **1/5/0** - Simulation speed (1x, 50x, 500000x)
-- **-/+** - Zoom out/in
-- **Arrow Keys** - Pan view
-- **R** - Reset view
-- **Mouse Wheel** - Zoom
-- **Right Click + Drag** - Pan
-
 ## Scenarios
 
 Place JSON scenario files in `scenarios/` directory:
