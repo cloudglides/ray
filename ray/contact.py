@@ -1,8 +1,11 @@
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 from .type_defs import Vector2
 
+if TYPE_CHECKING:
+    from .body import Body
+
 class Contact:
-    def __init__(self, body1, body2, normal: Vector2, penetration: float, restitution: float = 0.5):
+    def __init__(self, body1: "Body", body2: "Body", normal: Vector2, penetration: float, restitution: float = 0.5) -> None:
         self.body1 = body1
         self.body2 = body2
         self.normal = normal.normalize()

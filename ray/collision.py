@@ -1,6 +1,10 @@
+from typing import Optional, List, TYPE_CHECKING
 from .contact import Contact 
 
-def resolve_elastic_collision(body1, body2) -> Contact:
+if TYPE_CHECKING:
+    from .body import Body
+
+def resolve_elastic_collision(body1: "Body", body2: "Body") -> Optional[Contact]:
 
     
     collision_vector = body2.pos-body1.pos 
@@ -37,7 +41,7 @@ def resolve_elastic_collision(body1, body2) -> Contact:
     return contact
 
 
-def solve_collisions_iteratively(contacts, iterations:int = 10):
+def solve_collisions_iteratively(contacts: List[Contact], iterations: int = 10) -> None:
     beta=0.2
     slop=1e6
     for iterations in range(iterations):
@@ -55,10 +59,14 @@ def solve_collisions_iteratively(contacts, iterations:int = 10):
             inv_mass_sum=1.0/body1.mass+1.0/body2.mass
             impulse=-(1.0+contact.restitution)*vel_along_normal/inv_mass_sum - bias/inv_mass_sum
 
+
             if impulse<0:
                 continue
 
             impulse_vector=contact.normal*impulse
+
+
+
             body1.vel+=impulse_vector*(1.0/body1.mass)
             body2.vel-=impulse_vector*(1.0/body2.mass)
 

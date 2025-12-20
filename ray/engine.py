@@ -1,6 +1,11 @@
+from typing import List, Set, Tuple, TYPE_CHECKING
 from .type_defs import Vector2
 from .spatial_grid import SpatialGrid
 from .collision import *
+from .contact import Contact
+
+if TYPE_CHECKING:
+    from .body import Body
 
 
 class World:
@@ -8,12 +13,12 @@ class World:
             self,
             cell_size: float = 5e8,
             use_spatial_energy: bool = False,
-            ):
-        self.bodies=[]
-        self.spatial_grid = SpatialGrid(cell_size)
-        self.contacts = []
+            ) -> None:
+        self.bodies: List["Body"] = []
+        self.spatial_grid: SpatialGrid = SpatialGrid(cell_size)
+        self.contacts: List[Contact] = []
 
-    def update(self,dt):
+    def update(self, dt: float) -> List[Contact]:
         self.spatial_grid.clear()
         for body in self.bodies:
             self.spatial_grid.insert(body)
@@ -25,12 +30,12 @@ class World:
         solve_collisions_iteratively(collisions, iterations=10)
         return collisions 
 
-    def add_body(self, body):
+    def add_body(self, body: "Body") -> None:
         self.bodies.append(body)
     
-    def check_collisions(self):
-        collisions=[]
-        checked_pairs=set()
+    def check_collisions(self) -> List[Contact]:
+        collisions: List[Contact] = []
+        checked_pairs: Set[Tuple[int, int]] = set()
 
         for body in self.bodies:
             search_radius = body.radius+self.spatial_grid.cell_size
@@ -54,10 +59,10 @@ class World:
 
 
 
-    def get_total_energy(self):
+    def get_total_energy(self) -> float:
         return sum(b.kinetic_energy() for b in self.bodies)
     
-    def get_total_momentum(self):
+    def get_total_momentum(self) -> Vector2:
         p = Vector2()
         for b in self.bodies:
             p += b.vel * b.mass
