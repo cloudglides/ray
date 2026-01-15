@@ -1,10 +1,12 @@
 note: this library is unmaintained and not tested on any other system other than nixos which doesnt allow me to directly install this library from pip
 though you can always fork and fix it, ill appreciate it
 
+fun fact: it was supposed to be a game engine but i gave up mid way due to my weak GPU >; 
+
 # Ray
 
 A physics engine for simulating multi-body collisions and gravitational interactions in 2D space.
-fun fact: it was supposed to be a game engine but i gave up mid way due to my weak GPU >; 
+
 
 ## Overview
 
