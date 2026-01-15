@@ -1,6 +1,10 @@
+note: this library is unmaintained and not tested on any other system other than nixos which doesnt allow me to directly install this library from pip
+though you can always fork and fix it, ill appreciate it
+
 # Ray
 
 A physics engine for simulating multi-body collisions and gravitational interactions in 2D space.
+fun fact: it was supposed to be a game engine but i gave up mid way due to my weak GPU >; 
 
 ## Overview
 
@@ -16,6 +20,8 @@ Ray is a rigid body dynamics simulator designed to handle complex collision scen
 - **Restitution Support** - Configurable bounce coefficients for elastic collisions
 - **Spatial Hashing** - O(n) collision detection via grid-based spatial partitioning
 - **Energy Tracking** - Built-in validators for energy and momentum conservation
+
+note: some of the features might not work as expected due to it being scaled down to fit the screen, the values are heavily tweaked
 
 ## Installation
 
@@ -121,3 +127,6 @@ Place JSON scenario files in `scenarios/` directory:
 ## License
 
 GNU General Public License v3.0 - See LICENSE file for details.
+
+
+made with uh love and alot of monster
