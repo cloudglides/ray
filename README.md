@@ -1,12 +1,26 @@
+
+
+<p align="center"><img width="400" height="165" alt="logo" src="https://github.com/user-attachments/assets/b0a1b07c-8075-4a08-b4b2-7bd06db11771" /></p>
+
+
+
+
+
+<h1 align="center">Ray</h1>
+<p align="center">
+  <a href="#installation">Install</a> •
+  <a href="#running-simulations">Simulations</a> •
+  <a href="#architecture">Architecture</a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/cloudglides/ray">GitHub</a>
+</p>
+
 note: this library is unmaintained and not tested on any other system other than nixos which doesnt allow me to directly install this library from pip
 though you can always fork and fix it, ill appreciate it
 
 fun fact: it was supposed to be a game engine but i gave up mid way due to my weak GPU >; 
-
-# Ray
-
-A physics engine for simulating multi-body collisions and gravitational interactions in 2D space.
-
 
 ## Overview
 
