@@ -37,7 +37,7 @@ NIX_CC='/nix/store/r9wbjib6xxjkyb9yvjvrkl4sq61i2lyn-gcc-wrapper-15.2.0'
 export NIX_CC
 NIX_CC_WRAPPER_TARGET_HOST_x86_64_unknown_linux_gnu='1'
 export NIX_CC_WRAPPER_TARGET_HOST_x86_64_unknown_linux_gnu
-NIX_CFLAGS_COMPILE=' -frandom-seed=3gvj032937 -isystem /nix/store/qzc04a3npl70cyyy6flnnrb2ig3kayxm-python3-3.13.11/include -isystem /nix/store/ykkf8fxk58kz3qrfh6m221z2d0hfq27y-python3.13-pygame-2.6.1/include -isystem /nix/store/qzc04a3npl70cyyy6flnnrb2ig3kayxm-python3-3.13.11/include -isystem /nix/store/ykkf8fxk58kz3qrfh6m221z2d0hfq27y-python3.13-pygame-2.6.1/include'
+NIX_CFLAGS_COMPILE=' -frandom-seed=pwp2q0gwqi -isystem /nix/store/qzc04a3npl70cyyy6flnnrb2ig3kayxm-python3-3.13.11/include -isystem /nix/store/ykkf8fxk58kz3qrfh6m221z2d0hfq27y-python3.13-pygame-2.6.1/include -isystem /nix/store/qzc04a3npl70cyyy6flnnrb2ig3kayxm-python3-3.13.11/include -isystem /nix/store/ykkf8fxk58kz3qrfh6m221z2d0hfq27y-python3.13-pygame-2.6.1/include'
 export NIX_CFLAGS_COMPILE
 NIX_ENFORCE_NO_NATIVE='1'
 export NIX_ENFORCE_NO_NATIVE
@@ -188,7 +188,7 @@ export propagatedNativeBuildInputs
 declare -a propagatedTargetDepFiles=('propagated-target-target-deps' )
 shell='/nix/store/lw117lsr8d585xs63kx5k233impyrq7q-bash-5.3p3/bin/bash'
 export shell
-shellHook='export PYTHONPATH="/nix/store/n3w42ggfp20slymb84p4pzgy6ma08jg3-source:$PYTHONPATH"
+shellHook='export PYTHONPATH="/nix/store/abmafx39gxa3rc31vvbsn46v2p000pga-source:$PYTHONPATH"
 '
 export shellHook
 stdenv='/nix/store/n1k7lm072r5k3g6v6wb91d2q4sxcxddm-stdenv-linux'

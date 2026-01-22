@@ -26,11 +26,11 @@ jobs:
       
       - name: Build collision_sim
         run: |
-          pyinstaller --onefile --windowed --add-data "scenarios:scenarios" --add-data "ray:ray" collision_sim.py -n collision_sim
+          pyinstaller --onefile --windowed --add-data "scenarios:scenarios" --add-data "ray:ray" collision_sim.py -n collision_sim --distpath dist
       
       - name: Build earth_moon_sim
         run: |
-          pyinstaller --onefile --windowed --add-data "scenarios:scenarios" --add-data "ray:ray" earth_moon_sim.py -n earth_moon_sim
+          pyinstaller --onefile --windowed --add-data "scenarios:scenarios" --add-data "ray:ray" earth_moon_sim.py -n earth_moon_sim --distpath dist
       
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -38,11 +38,3 @@ jobs:
           name: windows-binaries
           path: dist/
           retention-days: 30
-      
-      - name: Create Release
-        if: startsWith(github.ref, 'refs/tags/')
-        uses: softprops/action-gh-release@v1
-        with:
-          files: dist/*.exe
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
