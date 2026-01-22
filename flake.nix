@@ -33,6 +33,7 @@
             python
             pygame
             pytest
+            pyinstaller
           ];
           shellHook = ''
             export PYTHONPATH="${builtins.toString ./.}:$PYTHONPATH"

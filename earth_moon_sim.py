@@ -1,7 +1,7 @@
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).parent.parent))
+sys.path.insert(0, str(Path(__file__).parent))
 import pygame
 import random
 import math
@@ -19,7 +19,7 @@ def get_data_path(relative_path):
     if getattr(sys, 'frozen', False):
         base_path = sys._MEIPASS
     else:
-        base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        base_path = os.path.dirname(os.path.abspath(__file__))
     return os.path.join(base_path, relative_path)
 
 pygame.init()
@@ -176,7 +176,6 @@ while running:
             dist = world.bodies[0].distance_to(world.bodies[1])
             if dist < 1e8:
                 pass
-                # print(f"WARNING: Distance collapsed to {dist:.2e}")
     if selected_body:
         info = f"mass:{selected_body.mass:.2e} | speed:{selected_body.speed():.1f} m/s"
         text = font.render(info, True, (255, 255, 0))

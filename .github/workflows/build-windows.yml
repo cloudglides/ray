@@ -1,0 +1,48 @@
+name: Build Windows Executables
+
+on:
+  push:
+    branches:
+      - master
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller
+      
+      - name: Build collision_sim
+        run: |
+          pyinstaller --onefile --windowed --add-data "scenarios:scenarios" --add-data "ray:ray" collision_sim.py -n collision_sim
+      
+      - name: Build earth_moon_sim
+        run: |
+          pyinstaller --onefile --windowed --add-data "scenarios:scenarios" --add-data "ray:ray" earth_moon_sim.py -n earth_moon_sim
+      
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-binaries
+          path: dist/
+          retention-days: 30
+      
+      - name: Create Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: dist/*.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
